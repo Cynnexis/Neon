@@ -18,6 +18,7 @@ The library that I used for that project are:
 ## Links ##
 * **[Qt Documentation - Styles Example](http://doc.qt.io/qt-5/qtwidgets-widgets-styles-example.html):** Tutorial to create a custom Qt style.
 * **[Qt Documentation - QProxyStyle Class](http://doc.qt.io/qt-5/qproxystyle.html#polish):** Documentation about `QProxyClass`.
+* **[Qt Wiki - How to create a library with Qt and use it in an application](https://wiki.qt.io/How_to_create_a_library_with_Qt_and_use_it_in_an_application):** Tutorial to link two project in Qt Creator - one for a library, the other for an application.
 
 ## Contributing ##
 No one yet.

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -35,6 +35,10 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui
+
+DEPENDPATH += . ../
+INCLUDEPATH += ../
+LIBS += -L../../build/debug -lNeon
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

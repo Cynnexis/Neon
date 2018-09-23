@@ -1,0 +1,5 @@
+
+QMainWindow, QFrame, QScrollBar, QWidget, QTabBar::tab {
+	background-color: rgb(10, 10, 20);
+	color: rgb(230, 230, 230);
+}

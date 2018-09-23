@@ -4,7 +4,10 @@
 #include "neon_global.h"
 #include "theme.h"
 
+#include <iostream>
 #include <QProxyStyle>
+
+using namespace std;
 
 class NEONSHARED_EXPORT Neon : public QProxyStyle
 {
@@ -13,7 +16,8 @@ public:
 
 	/* CONSTRUCTOR */
 
-	Neon(Theme theme = DARK);
+	Neon(QStyle *style = nullptr, Theme theme = DARK);
+	Neon(const QString &key, Theme theme = DARK);
 
 	/* NEON METHODS */
 
@@ -35,8 +39,10 @@ public:
 	Theme getTheme() const;
 	void  setTheme(Theme theme);
 
-private:
+private:	
 	Theme theme;
+
+	void initialize(Theme theme);
 };
 
 #endif // NEON_H
