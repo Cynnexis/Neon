@@ -23,12 +23,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        neon.cpp
+        neon.cpp \
+    singleapp.cpp \
+    status.cpp
 
 HEADERS += \
         neon.h \
         neon_global.h \ 
-    theme.h
+    theme.h \
+    singleapp.h \
+    status.h
 
 unix {
     target.path = /usr/lib
@@ -37,3 +41,8 @@ unix {
 
 RESOURCES += \
     neon_resources.qrc
+
+DISTFILES += \
+    README.md \
+    .gitignore \
+    LICENSE.txt

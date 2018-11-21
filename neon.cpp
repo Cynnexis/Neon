@@ -1,22 +1,24 @@
 #include "neon.h"
 
-#include <QApplication>
-#include <QFile>
-#include <QTextStream>
-#include <QMessageBox>
-
 /* CONSTRUCTOR */
 
-Neon::Neon(QStyle *style, Theme theme) : QProxyStyle(style) {
+Neon::Neon(QStyle *style, Theme theme, QWidget* target) : QProxyStyle(style) {
 	this->initialize(theme);
 }
 
-Neon::Neon(const QString &key, Theme theme) : QProxyStyle(key) {
+Neon::Neon(const QString &key, Theme theme, QWidget* target) : QProxyStyle(key) {
 	this->initialize(theme);
 }
 
 void Neon::initialize(Theme theme) {
 	Q_INIT_RESOURCE(neon_resources);
+
+	statuses.append(new Status("NORMAL", QColor(0, 100, 255), QColor(215, 218, 224)));
+	statuses.append(new Status("SUCCESS", QColor(130, 255, 28), QColor(215, 218, 224)));
+	statuses.append(new Status("INFO", QColor(28, 232, 255), QColor(215, 218, 224)));
+	statuses.append(new Status("WARNING", QColor(252, 138, 32), QColor(215, 218, 224)));
+	statuses.append(new Status("DANGER", QColor(252, 39, 32), QColor(215, 218, 224)));
+
 	QFile f_style(":/css/neon_darkness");
 
 	if (!f_style.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -73,6 +75,60 @@ void Neon::drawControl(QStyle::ControlElement control,
 					   const QStyleOption* option, QPainter* painter,
 					   const QWidget* widget) const {
 	return this->QProxyStyle::drawControl(control, option, painter, widget);
+}
+
+bool Neon::addStatus(Status* status) {
+	for (const Status* s : this->statuses)
+		if (s == status || s->getName() == status->getName())
+			return false;
+
+	this->statuses.append(status);
+	return true;
+}
+
+bool Neon::addStatus(QString name, QColor primaryColor) {
+	Status* normal = getStatus("NORMAL");
+	return addStatus(new Status(name, primaryColor, normal->getLightBackgroundColor(),
+								primaryColor, normal->getDarkBackgroundColor()));
+}
+
+bool Neon::addStatus(QString name, QColor primaryColor, QColor backgroundColor) {
+	return addStatus(new Status(name, primaryColor, backgroundColor,
+								primaryColor, backgroundColor));
+}
+
+bool Neon::addStatus(QString name, QColor lightPrimaryColor, QColor lightBackgroundColor, QColor darkPrimaryColor, QColor darkBackgroundColor) {
+	return addStatus(new Status(name, lightPrimaryColor, lightBackgroundColor,
+								darkPrimaryColor, darkBackgroundColor));
+}
+
+Status* Neon::getStatus(int index) {
+	return this->statuses.at(index);
+}
+
+Status* Neon::getStatus(QString name) {
+	for (Status* s : this->statuses)
+		if (s->getName() == name)
+			return s;
+
+	return nullptr;
+}
+
+bool Neon::removeStatus(Status* status) {
+	return this->statuses.removeOne(status);
+}
+
+void Neon::removeStatus(int index) {
+	if (index >= 5)
+		this->statuses.removeAt(index);
+	else
+		throw std::invalid_argument("Cannot remove built-in statuses. Please enter an index greater than 5.");
+}
+
+void Neon::removeStatus(QString name) {
+	for (int i = 0; i < this->statuses.size(); i++)
+		if (this->statuses.at(i)->getName() == name)
+			removeStatus(i);
 }
 
 /* GETTER & SETTER */

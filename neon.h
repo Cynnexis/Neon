@@ -2,10 +2,15 @@
 #define NEON_H
 
 #include "neon_global.h"
+#include "status.h"
 #include "theme.h"
 
 #include <iostream>
 #include <QProxyStyle>
+#include <QApplication>
+#include <QFile>
+#include <QTextStream>
+#include <QMessageBox>
 
 using namespace std;
 
@@ -16,31 +21,72 @@ public:
 
 	/* CONSTRUCTOR */
 
-	Neon(QStyle *style = nullptr, Theme theme = DARK);
-	Neon(const QString &key, Theme theme = DARK);
+	Neon(QStyle* style = nullptr, Theme theme, QWidget* target);
+	Neon(const QString &key, Theme theme, QWidget* target);
 
 	/* NEON METHODS */
 
 	void polish(QPalette& palette) override;
 	void polish(QWidget* widget) override;
 	void unpolish(QWidget* widget) override;
-	int pixelMetric(PixelMetric metric, const QStyleOption* option,
+	int pixelMetric(PixelMetric metric,
+					const QStyleOption* option,
 					const QWidget* widget) const override;
-	int styleHint(StyleHint hint, const QStyleOption* option,
+	int styleHint(StyleHint hint,
+				  const QStyleOption* option,
 				  const QWidget* widget,
 				  QStyleHintReturn* returnData) const override;
-	void drawPrimitive(PrimitiveElement element, const QStyleOption* option,
-					   QPainter* painter, const QWidget* widget) const override;
-	void drawControl(ControlElement control, const QStyleOption* option,
-					 QPainter* painter, const QWidget* widget) const override;
+	void drawPrimitive(PrimitiveElement element,
+					   const QStyleOption* option,
+					   QPainter* painter,
+					   const QWidget* widget) const override;
+	void drawControl(ControlElement control,
+					 const QStyleOption* option,
+					 QPainter* painter,
+					 const QWidget* widget) const override;
 
-	/* GETTER & SETTER */
+	bool addStatus(Status *status);
+	bool addStatus(QString name, QColor primaryColor);
+	bool addStatus(QString name, QColor primaryColor, QColor backgroundColor);
+	bool addStatus(QString name, QColor lightPrimaryColor, QColor lightBackgroundColor, QColor darkPrimaryColor, QColor darkBackgroundColor);
+	Status* getStatus(int index);
+	Status* getStatus(QString name);
+	bool removeStatus(Status *status);
+	void removeStatus(int index);
+	void removeStatus(QString name);
+
+	/* GETTERS */
 
 	Theme getTheme() const;
-	void  setTheme(Theme theme);
+	/*QColor* getPrimaryColor();
+	QColor* getBackgroundColor();*/
+	Status getCurrentStatus();
+
+public slots:
+
+	/* SETTERS */
+
+	void setTheme(Theme theme);
+	/*void setPrimaryColor(QColor* primaryColor);
+	void setBackgroundColor(QColor* backgroundColor);*/
+	Status setCurrentStatus(Status* status);
+	Status setCurrentStatus(int index);
+	Status setCurrentStatus(QString name);
+
+signals:
+	void themeChanged(Theme);
+	/*void primaryColorChanged(QColor*);
+	void backgroundColorChanged(QColor*);*/
+	void statusAdded(Status*);
+	void statusRemoved();
+	void currentStatusChanged(Status* oldStatus, Status* newStatus);
 
 private:	
 	Theme theme;
+	QWidget* target;
+
+	QList<Status*> statuses;
+	int indexCurrentStatus;
 
 	void initialize(Theme theme);
 };
