@@ -13,11 +13,11 @@ Neon::Neon(const QString &key, Theme theme, QWidget* target) : QProxyStyle(key) 
 void Neon::initialize(Theme theme) {
 	Q_INIT_RESOURCE(neon_resources);
 
-	statuses.append(new Status("NORMAL", QColor(0, 100, 255), QColor(215, 218, 224)));
-	statuses.append(new Status("SUCCESS", QColor(130, 255, 28), QColor(215, 218, 224)));
-	statuses.append(new Status("INFO", QColor(28, 232, 255), QColor(215, 218, 224)));
-	statuses.append(new Status("WARNING", QColor(252, 138, 32), QColor(215, 218, 224)));
-	statuses.append(new Status("DANGER", QColor(252, 39, 32), QColor(215, 218, 224)));
+	statuses.append(new Status("NORMAL", QColor(0, 100, 255), QColor(215, 218, 224), QColor(0, 100, 255), QColor(33, 37, 43)));
+	statuses.append(new Status("SUCCESS", QColor(130, 255, 28), QColor(215, 218, 224), QColor(130, 255, 28), QColor(33, 37, 43)));
+	statuses.append(new Status("INFO", QColor(28, 232, 255), QColor(215, 218, 224), QColor(28, 232, 255), QColor(33, 37, 43)));
+	statuses.append(new Status("WARNING", QColor(252, 138, 32), QColor(215, 218, 224), QColor(252, 138, 32), QColor(33, 37, 43)));
+	statuses.append(new Status("DANGER", QColor(252, 39, 32), QColor(215, 218, 224), QColor(252, 39, 32), QColor(33, 37, 43)));
 
 	QFile f_style(":/css/neon_darkness");
 

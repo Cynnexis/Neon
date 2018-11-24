@@ -21,7 +21,7 @@ public:
 
 	/* CONSTRUCTOR */
 
-	Neon(QStyle* style = nullptr, Theme theme, QWidget* target);
+	Neon(QStyle* style, Theme theme, QWidget* target);
 	Neon(const QString &key, Theme theme, QWidget* target);
 
 	/* NEON METHODS */
@@ -58,8 +58,6 @@ public:
 	/* GETTERS */
 
 	Theme getTheme() const;
-	/*QColor* getPrimaryColor();
-	QColor* getBackgroundColor();*/
 	Status getCurrentStatus();
 
 public slots:
@@ -67,16 +65,12 @@ public slots:
 	/* SETTERS */
 
 	void setTheme(Theme theme);
-	/*void setPrimaryColor(QColor* primaryColor);
-	void setBackgroundColor(QColor* backgroundColor);*/
 	Status setCurrentStatus(Status* status);
 	Status setCurrentStatus(int index);
 	Status setCurrentStatus(QString name);
 
 signals:
 	void themeChanged(Theme);
-	/*void primaryColorChanged(QColor*);
-	void backgroundColorChanged(QColor*);*/
 	void statusAdded(Status*);
 	void statusRemoved();
 	void currentStatusChanged(Status* oldStatus, Status* newStatus);

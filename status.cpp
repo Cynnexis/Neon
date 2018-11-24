@@ -97,10 +97,8 @@ void Status::setDarkBackgroundColor(const QColor& darkBackgroundColor) {
 
 bool Status::operator==(const Status& other) const {
 	return this->getName() == other.getName() &&
-			this->getLightPrimaryColor() == other.getLightPrimaryColor() &&
-			this->getLightBackgroundColor() == other.getLightBackgroundColor() &&
-			this->getDarkPrimaryColor() == other.getDarkPrimaryColor() &&
-			this->getDarkBackgroundColor() == other.getDarkBackgroundColor();
+			this->getPrimaryColors() == other.getPrimaryColors() &&
+			this->getBackgroundColors() == other.getBackgroundColors();
 }
 
 bool Status::operator!=(const Status& other) const {

@@ -6,6 +6,10 @@
     <qresource prefix="/musics"/>
     <qresource prefix="/fonts"/>
     <qresource prefix="/css">
-        <file alias="neon_darkness">res/css/neon_dark.css</file>
+        <file alias="neon_base">res/css/neon_base.css</file>
+    </qresource>
+    <qresource prefix="/json">
+        <file alias="neon_dark">res/css/neon_dark.json</file>
+        <file alias="neon_light">res/css/neon_light.json</file>
     </qresource>
 </RCC>

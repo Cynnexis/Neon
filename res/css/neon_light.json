@@ -1,0 +1,22 @@
+{
+	"NORMAL": {
+		"primaryColor": [0, 100, 255],
+		"backgroundColor": [215, 218, 224]
+	},
+	"SUCCESS": {
+		"primaryColor": [130, 255, 28],
+		"backgroundColor": [215, 218, 224]
+	},
+	"INFO": {
+		"primaryColor": [28, 232, 255],
+		"backgroundColor": [215, 218, 224]
+	},
+	"WARNING": {
+		"primaryColor": [252, 138, 32],
+		"backgroundColor": [215, 218, 224]
+	},
+	"DANGER": {
+		"primaryColor": [252, 39, 32],
+		"backgroundColor": [215, 218, 224]
+	}
+}

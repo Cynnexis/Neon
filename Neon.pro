@@ -25,14 +25,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         neon.cpp \
     singleapp.cpp \
-    status.cpp
+    status.cpp \
+    nresources.cpp
 
 HEADERS += \
         neon.h \
         neon_global.h \ 
     theme.h \
     singleapp.h \
-    status.h
+    status.h \
+    nresources.h
 
 unix {
     target.path = /usr/lib
