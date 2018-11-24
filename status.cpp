@@ -22,22 +22,12 @@ QString Status::getName() const {
 	return this->name;
 }
 
-QColor Status::getPrimaryColor(const Theme& theme) const {
-	switch (theme) {
-		case Theme::LIGHT:
-			return getLightPrimaryColor();
-		default:
-			return getDarkPrimaryColor();
-	}
+QMap<Theme, QColor> Status::getPrimaryColors() const {
+	return this->primaryColors;
 }
 
-QColor Status::getBackgroundColor(const Theme& theme) const {
-	switch (theme) {
-		case Theme::LIGHT:
-			return getLightBackgroundColor();
-		default:
-			return getDarkBackgroundColor();
-	}
+QMap<Theme, QColor> Status::getBackgroundColors() const {
+	return this->backgroundColors;
 }
 
 void Status::setName(const QString& name) {
@@ -45,26 +35,26 @@ void Status::setName(const QString& name) {
 	emit nameChanged(this->name);
 }
 
+QColor Status::getPrimaryColor(const Theme& theme) const {
+	return this->primaryColors[theme];
+}
+
 void Status::setPrimaryColor(const Theme& theme, const QColor& primaryColor) {
-	switch (theme) {
-		case Theme::LIGHT:
-			return setLightPrimaryColor(primaryColor);
-		default:
-			return setDarkPrimaryColor(primaryColor);
-	}
+	this->primaryColors[theme] = primaryColor;
+	emit primaryColorChanged(theme, primaryColor);
 }
 
 void Status::setPrimaryColor(const QColor& primaryColor, const Theme& theme) {
 	setPrimaryColor(theme, primaryColor);
 }
 
+QColor Status::getBackgroundColor(const Theme& theme) const {
+	return this->backgroundColors[theme];
+}
+
 void Status::setBackgroundColor(const Theme& theme, const QColor& backgroundColor) {
-	switch (theme) {
-		case Theme::LIGHT:
-			return setLightBackgroundColor(backgroundColor);
-		default:
-			return setDarkBackgroundColor(backgroundColor);
-	}
+	this->backgroundColors[theme] = backgroundColor;
+	emit backgroundColorChanged(theme, backgroundColor);
 }
 
 void Status::setBackgroundColor(const QColor& backgroundColor, const Theme& theme) {
@@ -72,43 +62,35 @@ void Status::setBackgroundColor(const QColor& backgroundColor, const Theme& them
 }
 
 QColor Status::getLightPrimaryColor() const {
-	return this->lightPrimaryColor;
+	return getPrimaryColor(Theme::LIGHT);
 }
 
 void Status::setLightPrimaryColor(const QColor& lightPrimaryColor) {
-	this->lightPrimaryColor = lightPrimaryColor;
-	emit lightPrimaryColorChanged(this->lightPrimaryColor);
+	setPrimaryColor(Theme::LIGHT, lightPrimaryColor);
 }
 
 QColor Status::getLightBackgroundColor() const {
-	return this->lightBackgroundColor;
+	return getBackgroundColor(Theme::LIGHT);
 }
 
 void Status::setLightBackgroundColor(const QColor& lightBackgroundColor) {
-	this->lightBackgroundColor = lightBackgroundColor;
-	emit lightBackgroundColorChanged(this->lightBackgroundColor);
+	setBackgroundColor(Theme::LIGHT, lightBackgroundColor);
 }
 
-QColor Status::getDarkPrimaryColor() const
-{
-	return darkPrimaryColor;
+QColor Status::getDarkPrimaryColor() const {
+	return getPrimaryColor(Theme::DARK);
 }
 
-void Status::setDarkPrimaryColor(const QColor& darkPrimaryColor)
-{
-	this->darkPrimaryColor = darkPrimaryColor;
-	emit darkPrimaryColorChanged(this->darkPrimaryColor);
+void Status::setDarkPrimaryColor(const QColor& darkPrimaryColor) {
+	setPrimaryColor(Theme::DARK, darkPrimaryColor);
 }
 
-QColor Status::getDarkBackgroundColor() const
-{
-	return darkBackgroundColor;
+QColor Status::getDarkBackgroundColor() const {
+	return getBackgroundColor(Theme::DARK);
 }
 
-void Status::setDarkBackgroundColor(const QColor& darkBackgroundColor)
-{
-	this->darkBackgroundColor = darkBackgroundColor;
-	emit darkBackgroundColorChanged(this->darkBackgroundColor);
+void Status::setDarkBackgroundColor(const QColor& darkBackgroundColor) {
+	setBackgroundColor(Theme::DARK, darkBackgroundColor);
 }
 
 /* OVERLOAD */

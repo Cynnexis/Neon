@@ -5,6 +5,7 @@
 
 #include <QColor>
 #include <QObject>
+#include <QMap>
 
 class Status : public QObject
 {
@@ -17,6 +18,8 @@ public:
 	/* GETTERS */
 
 	QString getName() const;
+	QMap<Theme, QColor> getPrimaryColors() const;
+	QMap<Theme, QColor> getBackgroundColors() const;
 	QColor getPrimaryColor(const Theme& theme) const;
 	QColor getBackgroundColor(const Theme& theme) const;
 	QColor getLightPrimaryColor() const;
@@ -46,17 +49,13 @@ public slots:
 signals:
 
 	void nameChanged(QString);
-	void lightPrimaryColorChanged(QColor);
-	void lightBackgroundColorChanged(QColor);
-	void darkPrimaryColorChanged(QColor);
-	void darkBackgroundColorChanged(QColor);
+	void primaryColorChanged(Theme, QColor);
+	void backgroundColorChanged(Theme, QColor);
 
 private:
 	QString name;
-	QColor lightPrimaryColor;
-	QColor lightBackgroundColor;
-	QColor darkPrimaryColor;
-	QColor darkBackgroundColor;
+	QMap<Theme, QColor> primaryColors;
+	QMap<Theme, QColor> backgroundColors;
 
 	void initialize(QString name, QColor lightPrimaryColor, QColor lightBackgroundColor,
 					QColor darkPrimaryColor, QColor darkBackgroundColor);
