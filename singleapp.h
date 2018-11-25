@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QApplication>
 
-class SingleApp
+class SingleApp : QObject
 {
 	Q_OBJECT
 

@@ -1,14 +1,14 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-09-22T15:19:23
+# Project created by QtCreator 2018-11-25T17:37:00
 #
 #-------------------------------------------------
 
-QT += core gui
+QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = NeonTest
+TARGET = Glow
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -29,16 +29,14 @@ SOURCES += \
         mainwindow.cpp
 
 HEADERS += \
-        mainwindow.h \
-	autorefreshprogressbar.h \
-    undeterminateprogressbar.h
+        mainwindow.h
 
 FORMS += \
         mainwindow.ui
 
-DEPENDPATH += . ../
-INCLUDEPATH += ../
-LIBS += -L../../build/debug -lNeon
+DEPENDPATH += . ../../
+INCLUDEPATH += ../../
+LIBS += -L../../build/debug/ -lNeon
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
