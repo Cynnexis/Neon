@@ -11,26 +11,21 @@
 #include "theme.h"
 #include "status.h"
 
-class NResources
+namespace NResources
 {
-public:
-	static QString getNeonDarkJSONPath();
-	static QString getNeonLightJSONPath();
-	static QString getNeonBaseCSSPath();
+	QString getNeonDarkJSONPath();
+	QString getNeonLightJSONPath();
+	QString getNeonBaseCSSPath();
 
-	static QString getNeonDarkJSON();
-	static QString getNeonLightJSON();
-	static QString getNeonBaseCSS();
+	QString getNeonDarkJSON();
+	QString getNeonLightJSON();
+	QString getNeonBaseCSS();
 
-	static QString getNeonDarkCSS(const Status& status);
-	static QString getNeonDarkCSS(const QString& statusName);
+	QString getNeonDarkCSS(const Status& status);
+	QString getNeonDarkCSS(const QString& statusName);
 
-	static QString getNeonLightCSS(const Status& status);
-	static QString getNeonLightCSS(const QString& statusName);
-
-private:
-	static QString read(const QString& filename);
-	static QString constructCSS(const QString& statusName, const QString& raw_json, QString css = "");
+	QString getNeonLightCSS(const Status& status);
+	QString getNeonLightCSS(const QString& statusName);
 };
 
 #endif // NRESOURCES_H

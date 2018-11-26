@@ -1,5 +1,8 @@
 #include "nresources.h"
 
+QString read(const QString& filename);
+QString constructCSS(const QString& statusName, const QString& raw_json, QString css = "");
+
 QString NResources::getNeonDarkJSONPath() {
 #ifdef QT_DEBUG
 	return "res/css/neon_light.css";
@@ -52,7 +55,7 @@ QString NResources::getNeonLightCSS(const QString& statusName) {
 
 /* PRIVATE FUNCTIONS */
 
-QString NResources::read(const QString& filename) {
+QString read(const QString& filename) {
 	QFile f(filename);
 
 	if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -63,9 +66,9 @@ QString NResources::read(const QString& filename) {
 
 	return result;
 }
-QString NResources::constructCSS(const QString& statusName, const QString& raw_json, QString css) {
+QString constructCSS(const QString& statusName, const QString& raw_json, QString css) {
 	if (css == "")
-		css = getNeonBaseCSS();
+		css = NResources::getNeonBaseCSS();
 
 	QJsonDocument doc = QJsonDocument::fromJson(raw_json.toUtf8());
 	QJsonObject json = doc.object();
