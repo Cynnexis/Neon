@@ -63,7 +63,6 @@ QString NResources::read(const QString& filename) {
 
 	return result;
 }
-
 QString NResources::constructCSS(const QString& statusName, const QString& raw_json, QString css) {
 	if (css == "")
 		css = getNeonBaseCSS();

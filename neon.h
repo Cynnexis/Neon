@@ -4,6 +4,7 @@
 #include "neon_global.h"
 #include "status.h"
 #include "theme.h"
+#include "nresources.h"
 
 #include <iostream>
 #include <QProxyStyle>
@@ -16,11 +17,13 @@ using namespace std;
 
 class NEONSHARED_EXPORT Neon : public QProxyStyle
 {
+	Q_OBJECT
 
 public:
 
 	/* CONSTRUCTOR */
 
+	Neon();
 	Neon(QStyle* style, Theme theme, QWidget* target);
 	Neon(const QString &key, Theme theme, QWidget* target);
 
@@ -65,15 +68,15 @@ public slots:
 	/* SETTERS */
 
 	void setTheme(Theme theme);
-	Status setCurrentStatus(Status* status);
-	Status setCurrentStatus(int index);
-	Status setCurrentStatus(QString name);
+	Status* setCurrentStatus(const Status& status);
+	Status* setCurrentStatus(const int index);
+	Status* setCurrentStatus(const QString name);
 
 signals:
 	void themeChanged(Theme);
 	void statusAdded(Status*);
 	void statusRemoved();
-	void currentStatusChanged(Status* oldStatus, Status* newStatus);
+	void currentStatusChanged(Status*);
 
 private:	
 	Theme theme;

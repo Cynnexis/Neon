@@ -34,9 +34,12 @@ HEADERS += \
 FORMS += \
         mainwindow.ui
 
-DEPENDPATH += . ../../
-INCLUDEPATH += ../../
-LIBS += -L../../build/debug/ -lNeon
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../build/release/ -lNeon
+else:win32:CONFIG(debug, debug|release): LIBS += -L. -L$$PWD/../../build/debug/ -lNeon
+else:unix: LIBS += -L$$PWD/../../build/ -lNeon
+
+INCLUDEPATH += $$PWD/../../
+DEPENDPATH += $$PWD/../../
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

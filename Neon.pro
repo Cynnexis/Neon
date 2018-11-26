@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += widgets svg testlib
+QT += core gui widgets svg
 
 TARGET = Neon
 TEMPLATE = lib
@@ -23,14 +23,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        neon.cpp \
+	neon.cpp \
     singleapp.cpp \
     status.cpp \
     nresources.cpp
 
 HEADERS += \
-        neon.h \
-        neon_global.h \ 
+	neon.h \
+	neon_global.h \
     theme.h \
     singleapp.h \
     status.h \
@@ -47,4 +47,5 @@ RESOURCES += \
 DISTFILES += \
     README.md \
     .gitignore \
-    LICENSE.txt
+	LICENSE.txt \
+	compile_res.bat

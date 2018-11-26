@@ -2,6 +2,10 @@
 
 /* CONSTRUCTOR */
 
+Neon::Neon() : QProxyStyle("") {
+	qDebug() << NResources::getNeonDarkCSS("NORMAL");
+}
+
 Neon::Neon(QStyle *style, Theme theme, QWidget* target) : QProxyStyle(style) {
 	this->initialize(theme);
 }
@@ -126,9 +130,17 @@ void Neon::removeStatus(int index) {
 }
 
 void Neon::removeStatus(QString name) {
-	for (int i = 0; i < this->statuses.size(); i++)
-		if (this->statuses.at(i)->getName() == name)
-			removeStatus(i);
+	if (name != "NORMAL" || name != "SUCCESS" || name != "INFO" || name != "WARNING" || name != "DANGER") {
+		for (int i = 0; i < this->statuses.size(); i++) {
+			if (this->statuses.at(i)->getName() == name) {
+				removeStatus(i);
+				break;
+			}
+		}
+
+		// If the old index was pointing at the old status, change it to "NORMAL"
+		setCurrentStatus(0);
+	}
 }
 
 /* GETTER & SETTER */
@@ -141,5 +153,23 @@ void Neon::setTheme(Theme theme) {
 	this->theme = theme;
 }
 
+Status* Neon::setCurrentStatus(const Status& status) {
+	return setCurrentStatus(status.getName());
+}
 
+Status* Neon::setCurrentStatus(const int index) {
+	if (0 <= index && index < statuses.length()) {
+		indexCurrentStatus = index;
+		emit currentStatusChanged(statuses[indexCurrentStatus]);
+	}
 
+	return statuses[indexCurrentStatus];
+}
+
+Status* Neon::setCurrentStatus(const QString name) {
+	for (int i = 0; i < this->statuses.size(); i++)
+		if (this->statuses.at(i)->getName() == name)
+			return setCurrentStatus(i);
+
+	return statuses[indexCurrentStatus];
+}

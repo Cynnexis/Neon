@@ -11,9 +11,8 @@
 #include "theme.h"
 #include "status.h"
 
-class NResources : public QObject
+class NResources
 {
-	Q_OBJECT
 public:
 	static QString getNeonDarkJSONPath();
 	static QString getNeonLightJSONPath();
