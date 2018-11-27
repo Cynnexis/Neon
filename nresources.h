@@ -1,15 +1,21 @@
 #ifndef NRESOURCES_H
 #define NRESOURCES_H
 
+#include <iostream>
+
 #include <QFile>
 #include <QObject>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QJsonArray>
 #include <QDebug>
 
 #include "theme.h"
 #include "status.h"
+#include "ioexception.h"
+
+using namespace std;
 
 namespace NResources
 {

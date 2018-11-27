@@ -5,7 +5,7 @@ QString constructCSS(const QString& statusName, const QString& raw_json, QString
 
 QString NResources::getNeonDarkJSONPath() {
 #ifdef QT_DEBUG
-	return "res/css/neon_light.css";
+	return "res/css/neon_light.json";
 #else
 	return ":/css/neon_light";
 #endif
@@ -13,7 +13,7 @@ QString NResources::getNeonDarkJSONPath() {
 
 QString NResources::getNeonLightJSONPath() {
 #ifdef QT_DEBUG
-	return "res/css/neon_dark.css";
+	return "res/css/neon_dark.json";
 #else
 	return ":/css/neon_dark";
 #endif
@@ -59,7 +59,7 @@ QString read(const QString& filename) {
 	QFile f(filename);
 
 	if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
-		throw "File not found";
+		IOException("File not found").raise();
 
 	QString result = f.readAll();
 	f.close();
@@ -78,14 +78,23 @@ QString constructCSS(const QString& statusName, const QString& raw_json, QString
 	for (int i = 0; i < keys.length() && value.toString("") != statusName; i++)
 		value = json[keys[i]];
 
-	qDebug() << "value = " << value;
-
 	// Now that we have selected the namespace, we can take the variables:
 	QJsonValue primaryColorItem = value.toObject()["primaryColor"];
 	QJsonValue backgroundColorItem = value.toObject()["backgroundColor"];
 
-	QString primaryColor = primaryColorItem.toString();
-	QString backgroundColor = backgroundColorItem.toString();
+	QJsonArray primaryColorArray = primaryColorItem.toArray();
+	QJsonArray backgroundColorArray = backgroundColorItem.toArray();
+
+	QString primaryColor = "rgb(";
+	QString backgroundColor = "rgb(";
+
+	for (int i = 0; i < primaryColorArray.size(); i++)
+		primaryColor += (i > 0 ? ", " : "") +  QString::number(primaryColorArray[i].toInt());
+	primaryColor += ")";
+
+	for (int i = 0; i < backgroundColorArray.size(); i++)
+		backgroundColor += (i > 0 ? ", " : "") +  QString::number(backgroundColorArray[i].toInt());
+	backgroundColor += ")";
 
 	css = css.replace("@primaryColor", primaryColor);
 	css = css.replace("@backgroundColor", backgroundColor);

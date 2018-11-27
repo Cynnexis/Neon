@@ -26,7 +26,8 @@ SOURCES += \
 	neon.cpp \
     singleapp.cpp \
     status.cpp \
-    nresources.cpp
+    nresources.cpp \
+    ioexception.cpp
 
 HEADERS += \
 	neon.h \
@@ -34,7 +35,8 @@ HEADERS += \
     theme.h \
     singleapp.h \
     status.h \
-    nresources.h
+    nresources.h \
+    ioexception.h
 
 unix {
     target.path = /usr/lib

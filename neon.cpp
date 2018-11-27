@@ -3,7 +3,7 @@
 /* CONSTRUCTOR */
 
 Neon::Neon() : QProxyStyle("") {
-	qDebug() << NResources::getNeonDarkJSONPath();
+	qDebug() << NResources::getNeonDarkCSS("NORMAL");
 }
 
 Neon::Neon(QStyle *style, Theme theme, QWidget* target) : QProxyStyle(style) {
