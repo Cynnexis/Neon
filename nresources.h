@@ -32,6 +32,8 @@ namespace NResources
 
 	QString getNeonLightCSS(const Status& status);
 	QString getNeonLightCSS(const QString& statusName);
+
+	QString merge(QString css, QMap<QString, QString> vars);
 };
 
 #endif // NRESOURCES_H

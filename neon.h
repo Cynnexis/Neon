@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QSettings>
 
 using namespace std;
 
@@ -23,9 +24,8 @@ public:
 
 	/* CONSTRUCTOR */
 
-	Neon();
-	Neon(QStyle* style, Theme theme, QWidget* target);
-	Neon(const QString &key, Theme theme, QWidget* target);
+	Neon(QWidget* target);
+	Neon(QWidget* target, Theme theme);
 
 	/* NEON METHODS */
 
@@ -61,7 +61,12 @@ public:
 	/* GETTERS */
 
 	Theme getTheme() const;
-	Status getCurrentStatus();
+	Status* getCurrentStatus();
+
+	QString getStylesheet(Theme theme, Status status);
+	QString getStylesheet(Theme theme);
+	QString getStylesheet(Status status);
+	QString getStylesheet();
 
 public slots:
 
@@ -81,11 +86,13 @@ signals:
 private:	
 	Theme theme;
 	QWidget* target;
+	QSettings settings;
 
 	QList<Status*> statuses;
 	int indexCurrentStatus;
 
-	void initialize(Theme theme);
+	void initialize(QWidget* target, Theme theme);
+	void loadStatuses();
 };
 
 #endif // NEON_H

@@ -53,6 +53,13 @@ QString NResources::getNeonLightCSS(const QString& statusName) {
 	return constructCSS(statusName, getNeonLightJSON());
 }
 
+QString NResources::merge(QString css, QMap<QString, QString> vars) {
+	for (QString key : vars.keys())
+		css = css.replace("@" + key, vars.value(key, ""));
+
+	return css;
+}
+
 /* PRIVATE FUNCTIONS */
 
 QString read(const QString& filename) {
@@ -69,6 +76,8 @@ QString read(const QString& filename) {
 QString constructCSS(const QString& statusName, const QString& raw_json, QString css) {
 	if (css == "")
 		css = NResources::getNeonBaseCSS();
+
+	QMap<QString, QString> vars;
 
 	QJsonDocument doc = QJsonDocument::fromJson(raw_json.toUtf8());
 	QJsonObject json = doc.object();
@@ -96,8 +105,8 @@ QString constructCSS(const QString& statusName, const QString& raw_json, QString
 		backgroundColor += (i > 0 ? ", " : "") +  QString::number(backgroundColorArray[i].toInt());
 	backgroundColor += ")";
 
-	css = css.replace("@primaryColor", primaryColor);
-	css = css.replace("@backgroundColor", backgroundColor);
+	vars["primaryColor"] = primaryColor;
+	vars["backgroundColor"] = backgroundColor;
 
-	return css;
+	return NResources::merge(css, vars);
 }

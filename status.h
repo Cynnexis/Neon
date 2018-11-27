@@ -3,9 +3,14 @@
 
 #include "theme.h"
 
+#include <iostream>
 #include <QColor>
 #include <QObject>
 #include <QMap>
+#include <QJsonObject>
+#include <QJsonDocument>
+
+using namespace std;
 
 class Status : public QObject
 {
@@ -14,6 +19,9 @@ public:
 	Status(QString name, QColor primaryColor, QColor backgroundColor, QObject* parent = nullptr);
 	Status(QString name, QColor lightPrimaryColor, QColor lightBackgroundColor,
 		   QColor darkPrimaryColor, QColor darkBackgroundColor, QObject* parent = nullptr);
+	Status(QString name, QMap<Theme, QColor> primaryColors, QMap<Theme, QColor> backgroundColors);
+	Status(const Status& copy);
+	~Status();
 
 	/* GETTERS */
 
@@ -26,6 +34,11 @@ public:
 	QColor getLightBackgroundColor() const;
 	QColor getDarkPrimaryColor() const;
 	QColor getDarkBackgroundColor() const;
+
+	/* IO Functions */
+
+	QString toString();
+	static Status fromString(QString string);
 
 	/* OVERLOAD */
 

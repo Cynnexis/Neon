@@ -2,47 +2,51 @@
 
 /* CONSTRUCTOR */
 
-Neon::Neon() : QProxyStyle("") {
-	qDebug() << NResources::getNeonDarkCSS("NORMAL");
+Neon::Neon(QWidget* target) : QProxyStyle() {
+	int t = settings.value("neon_lib/theme", Theme::DARK).toInt();
+	this->initialize(target, static_cast<Theme>(t));
 }
 
-Neon::Neon(QStyle *style, Theme theme, QWidget* target) : QProxyStyle(style) {
-	this->initialize(theme);
+Neon::Neon(QWidget* target, Theme theme) : QProxyStyle() {
+	this->initialize(target, theme);
 }
 
-Neon::Neon(const QString &key, Theme theme, QWidget* target) : QProxyStyle(key) {
-	this->initialize(theme);
-}
-
-void Neon::initialize(Theme theme) {
+void Neon::initialize(QWidget* target, Theme theme) {
 	Q_INIT_RESOURCE(neon_resources);
+
+	this->target = target;
+	this->setTheme(theme);
 
 	statuses.append(new Status("NORMAL", QColor(0, 100, 255), QColor(215, 218, 224), QColor(0, 100, 255), QColor(33, 37, 43)));
 	statuses.append(new Status("SUCCESS", QColor(130, 255, 28), QColor(215, 218, 224), QColor(130, 255, 28), QColor(33, 37, 43)));
 	statuses.append(new Status("INFO", QColor(28, 232, 255), QColor(215, 218, 224), QColor(28, 232, 255), QColor(33, 37, 43)));
 	statuses.append(new Status("WARNING", QColor(252, 138, 32), QColor(215, 218, 224), QColor(252, 138, 32), QColor(33, 37, 43)));
 	statuses.append(new Status("DANGER", QColor(252, 39, 32), QColor(215, 218, 224), QColor(252, 39, 32), QColor(33, 37, 43)));
+	loadStatuses();
 
-	QFile f_style(":/css/neon_darkness");
-
-	if (!f_style.open(QIODevice::ReadOnly | QIODevice::Text)) {
-		QString error(tr("Cannot read the QSS (Qt Style Sheet)."));
-		QMessageBox::critical(nullptr, "Error", error);
-		cout << "Neon::initialize> Error: " << error.toStdString() << endl;
-		qApp->exit(-1);
-	}
-
-	QTextStream in(&f_style);
-
-	QString stylesheetContent("");
-	while (!in.atEnd())
-		stylesheetContent += in.readLine();
-
-	f_style.close();
-
-	cout << "Neon::initialize> stylesheet: " << stylesheetContent.toStdString() << endl;
 	qApp->setStyleSheet(stylesheetContent);
-	this->setTheme(theme);
+}
+
+void Neon::loadStatuses() {
+	// Fetch the list of names of statuses
+	QStringList names = settings.value("neon_lib/statusesName", QVariant(QStringList())).toStringList();
+
+	// For each name...
+	for (QString name : names) {
+		// Fetch the JSON representation of the status
+		QString statusJson = settings.value("neon_lib/status(" + name + ")", "").toString();
+
+		// Try to convert the JSON content into a string
+		try {
+			Status s = Status::fromString(statusJson);
+
+			// If the conversion worked, add the status to the main list
+			statuses.append(&s);
+		} catch (std::exception e) {
+			// If the conversion failed, delete the key and ignore
+			settings.remove("neon_lib/status(" + name + ")");
+		}
+	}
 }
 
 /* NEON METHODS */
@@ -87,6 +91,13 @@ bool Neon::addStatus(Status* status) {
 			return false;
 
 	this->statuses.append(status);
+
+	QStringList names = settings.value("neon_lib/statusesName", QVariant(QStringList())).toStringList();
+	names.append(status->getName());
+
+	settings.setValue("neon_lib/statusesName", names);
+	settings.setValue("neon_lib/status(" + status->getName() + ")", status->toString());
+
 	return true;
 }
 
@@ -149,8 +160,14 @@ Theme Neon::getTheme() const {
 	return this->theme;
 }
 
+Status* Neon::getCurrentStatus() {
+	return statuses.at(indexCurrentStatus);
+}
+
 void Neon::setTheme(Theme theme) {
 	this->theme = theme;
+	settings.setValue("neon_lib/theme", this->theme);
+	emit themeChanged(this->theme);
 }
 
 Status* Neon::setCurrentStatus(const Status& status) {
@@ -160,6 +177,7 @@ Status* Neon::setCurrentStatus(const Status& status) {
 Status* Neon::setCurrentStatus(const int index) {
 	if (0 <= index && index < statuses.length()) {
 		indexCurrentStatus = index;
+		settings.setValue("neon_lib/indexCurrentStatus", indexCurrentStatus);
 		emit currentStatusChanged(statuses[indexCurrentStatus]);
 	}
 
@@ -172,4 +190,25 @@ Status* Neon::setCurrentStatus(const QString name) {
 			return setCurrentStatus(i);
 
 	return statuses[indexCurrentStatus];
+}
+
+QString Neon::getStylesheet(Theme theme, Status status) {
+	switch (theme) {
+		case Theme::LIGHT:
+			return NResources::getNeonLightCSS(status);
+		default:
+			return NResources::getNeonDarkCSS(status);
+	}
+}
+
+QString Neon::getStylesheet(Theme theme) {
+	return getStylesheet(theme, *getCurrentStatus());
+}
+
+QString Neon::getStylesheet(Status status) {
+	return getStylesheet(getTheme(), status);
+}
+
+QString Neon::getStylesheet() {
+	return getStylesheet(getTheme(), *getCurrentStatus());
 }
