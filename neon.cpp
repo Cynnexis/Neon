@@ -7,7 +7,7 @@ Neon::Neon(QWidget* target) : QProxyStyle() {
 	this->initialize(target, static_cast<Theme>(t));
 }
 
-Neon::Neon(QWidget* target, Theme theme) : QProxyStyle() {
+Neon::Neon(Theme theme, QWidget* target) : QProxyStyle() {
 	this->initialize(target, theme);
 }
 
@@ -24,7 +24,12 @@ void Neon::initialize(QWidget* target, Theme theme) {
 	statuses.append(new Status("DANGER", QColor(252, 39, 32), QColor(215, 218, 224), QColor(252, 39, 32), QColor(33, 37, 43)));
 	loadStatuses();
 
-	qApp->setStyleSheet(stylesheetContent);
+	indexCurrentStatus = settings.value("neon_lib/indexCurrentStatus", 0).toInt();
+
+	if (this->target == nullptr)
+		qApp->setStyleSheet(getStylesheet());
+	else
+		target->setStyleSheet(getStylesheet());
 }
 
 void Neon::loadStatuses() {

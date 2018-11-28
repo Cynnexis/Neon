@@ -24,8 +24,8 @@ public:
 
 	/* CONSTRUCTOR */
 
-	Neon(QWidget* target);
-	Neon(QWidget* target, Theme theme);
+	Neon(QWidget* target = nullptr);
+	Neon(Theme theme, QWidget* target = nullptr);
 
 	/* NEON METHODS */
 
