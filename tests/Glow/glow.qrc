@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/txt">
+        <file alias="countries">res/txt/countries.txt</file>
+    </qresource>
+</RCC>

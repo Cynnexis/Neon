@@ -45,3 +45,9 @@ DEPENDPATH += $$PWD/../../
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    res/txt/countries.txt
+
+RESOURCES += \
+    glow.qrc

@@ -2,12 +2,12 @@
 
 /* CONSTRUCTOR */
 
-Neon::Neon(QWidget* target) : QProxyStyle() {
+Neon::Neon(QWidget* target) : QObject(target) {
 	int t = settings.value("neon_lib/theme", Theme::DARK).toInt();
 	this->initialize(target, static_cast<Theme>(t));
 }
 
-Neon::Neon(Theme theme, QWidget* target) : QProxyStyle() {
+Neon::Neon(Theme theme, QWidget* target) : QObject(target) {
 	this->initialize(target, theme);
 }
 
@@ -56,50 +56,16 @@ void Neon::loadStatuses() {
 
 /* NEON METHODS */
 
-void Neon::polish(QPalette& palette) {
-	this->QProxyStyle::polish(palette);
-}
-
-void Neon::polish(QWidget* widget) {
-	this->QProxyStyle::polish(widget);
-}
-
-void Neon::unpolish(QWidget* widget) {
-	this->QProxyStyle::unpolish(widget);
-}
-
-int Neon::pixelMetric(QStyle::PixelMetric metric, const QStyleOption* option,
-					  const QWidget* widget) const {
-	return this->QProxyStyle::pixelMetric(metric, option, widget);
-}
-
-int Neon::styleHint(QStyle::StyleHint hint, const QStyleOption* option,
-					const QWidget* widget, QStyleHintReturn* returnData) const {
-	return this->QProxyStyle::styleHint(hint, option, widget, returnData);
-}
-
-void Neon::drawPrimitive(QStyle::PrimitiveElement element,
-						 const QStyleOption* option, QPainter* painter,
-						 const QWidget* widget) const {
-	return this->QProxyStyle::drawPrimitive(element, option, painter, widget);
-}
-
-void Neon::drawControl(QStyle::ControlElement control,
-					   const QStyleOption* option, QPainter* painter,
-					   const QWidget* widget) const {
-	return this->QProxyStyle::drawControl(control, option, painter, widget);
-}
-
 bool Neon::addStatus(Status* status) {
 	for (const Status* s : this->statuses)
 		if (s == status || s->getName() == status->getName())
 			return false;
-
+	
 	this->statuses.append(status);
-
+	
 	QStringList names = settings.value("neon_lib/statusesName", QVariant(QStringList())).toStringList();
 	names.append(status->getName());
-
+	
 	settings.setValue("neon_lib/statusesName", names);
 	settings.setValue("neon_lib/status(" + status->getName() + ")", status->toString());
 

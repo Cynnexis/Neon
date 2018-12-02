@@ -12,10 +12,57 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	ui->cb_gender->addItems(QStringList({"Male", "Female", "Agender", "Transgender", "Male Transgender", "Female Transgender", "Non-binary", "Genderqueer", "Third Gender", "Two-spirit"}));
 	ui->cb_pronouns->addItems(QStringList({"he", "she", "they", "<name>", "ae", "fae", "e", "ey", "per", "ve", "xe", "ze", "zie"}));
+	
+	ui->cb_country->addItems(getCountries());
+	
+	// Load from settings
+	ui->le_firstname->setText(settings.value("form/firstname", "").toString());
+	ui->le_lastname->setText(settings.value("form/lastname", "").toString());
+	ui->sp_age->setValue(settings.value("form/age", 18).toInt());
+	ui->dt_birthday->setDateTime(settings.value("form/birthday", QDateTime()).toDateTime());
+	ui->cb_gender->setEditText(settings.value("form/gender", "").toString());
+	ui->cb_pronouns->setEditText(settings.value("form/pronoun", "").toString());
+	ui->cb_country->setEditText(settings.value("form/country", "").toString());
+	
+	int like = settings.value("form/likeNeon", 0).toInt();
+	
+	switch (like) {
+		case 1:
+			ui->rb_like->setChecked(true);
+			break;
+		case 2:
+			ui->rb_dislike->setChecked(true);
+			break;
+		default:
+			ui->rb_love->setChecked(true);
+			break;
+	}
+	
+	ui->tb_comments->setHtml(settings.value("form/comments", "").toString());
 }
 
 MainWindow::~MainWindow() {
 	delete ui;
+}
+
+QStringList MainWindow::getCountries() {
+#ifdef QT_DEBUG
+	QFile f("tests/Glow/res/txt/countries.txt");
+#else
+	QFile f(":/txt/countries");
+#endif
+	
+	if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		cout << "Cannot open `countries.txt`" << endl;
+		throw "Cannot open `countries.txt`";
+	}
+	
+	QString raw_countries = f.readAll();
+	QStringList countries = raw_countries.split(QRegularExpression("(\r\n|\r|\n)"));
+	countries.removeDuplicates();
+	countries.removeAll(QString(""));
+	
+	return countries;
 }
 
 void MainWindow::on_pushButton_clicked() {
@@ -78,10 +125,46 @@ void MainWindow::updatePronounExample() {
 		ui->lb_pronounExample->setText("Please fill `first name` and `pronoun` fields first");
 }
 
-void MainWindow::on_le_firstname_textChanged(const QString &arg1) {
+void MainWindow::on_le_firstname_textChanged(const QString& arg1) {
 	updatePronounExample();
 }
 
-void MainWindow::on_le_firstname_textEdited(const QString &arg1) {
+void MainWindow::on_le_firstname_textEdited(const QString& arg1) {
 	updatePronounExample();
+}
+
+void MainWindow::on_cb_activateFlat_toggled(bool checked) {
+	ui->pb_flat->setEnabled(!checked);
+}
+
+void MainWindow::on_pb_saveForm_clicked() {
+    settings.setValue("form/firstname", ui->le_firstname->text());
+    settings.setValue("form/lastname", ui->le_lastname->text());
+    settings.setValue("form/age", ui->sp_age->value());
+    settings.setValue("form/birthday", ui->dt_birthday->dateTime());
+    settings.setValue("form/gender", ui->cb_gender->currentText());
+    settings.setValue("form/pronoun", ui->cb_pronouns->currentText());
+    settings.setValue("form/country", ui->cb_country->currentText());
+	
+	int like = 0;
+	if (ui->rb_love->isChecked())
+		like = 0;
+	else if (ui->rb_like->isChecked())
+		like = 1;
+	else if (ui->rb_dislike->isChecked())
+		like = 2;
+	
+    settings.setValue("form/likeNeon", like);
+    settings.setValue("form/comments", ui->tb_comments->toHtml());
+	
+	settings.sync();
+	qDebug() << "Settings saved at \"" << settings.fileName().replace("\\\\", "\\") << "\"";
+}
+
+void MainWindow::on_actionAbout_Glow_triggered() {
+    QMessageBox::about(this, "About Glow...", "Glow is an application to test GUI.");
+}
+
+void MainWindow::on_actionAbout_Qt_triggered() {
+    QMessageBox::aboutQt(this, "About Qt...");
 }

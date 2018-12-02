@@ -57,6 +57,51 @@
                     <property name="text">
                      <string>Click me!</string>
                     </property>
+                    <property name="checkable">
+                     <bool>false</bool>
+                    </property>
+                    <property name="autoRepeat">
+                     <bool>false</bool>
+                    </property>
+                    <property name="default">
+                     <bool>false</bool>
+                    </property>
+                    <property name="flat">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pb_disabled">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="text">
+                     <string>I'm deactivated 😭</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pb_flat">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="text">
+                     <string>I'm flat 😑</string>
+                    </property>
+                    <property name="flat">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="cb_activateFlat">
+                    <property name="text">
+                     <string>Deactivate flat button</string>
+                    </property>
+                    <property name="tristate">
+                     <bool>false</bool>
+                    </property>
                    </widget>
                   </item>
                  </layout>
@@ -114,7 +159,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
+             <y>-130</y>
              <width>501</width>
              <height>390</height>
             </rect>
@@ -195,7 +240,7 @@
                   <string>Indeterminate</string>
                  </property>
                  <attribute name="buttonGroup">
-                  <string notr="true">buttonGroup</string>
+                  <string notr="true">bt_customProgressBar</string>
                  </attribute>
                 </widget>
                </item>
@@ -208,7 +253,7 @@
                   <bool>true</bool>
                  </property>
                  <attribute name="buttonGroup">
-                  <string notr="true">buttonGroup</string>
+                  <string notr="true">bt_customProgressBar</string>
                  </attribute>
                 </widget>
                </item>
@@ -252,9 +297,9 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-258</y>
+             <y>-491</y>
              <width>501</width>
-             <height>518</height>
+             <height>959</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -399,6 +444,92 @@
                  </layout>
                 </widget>
                </item>
+               <item>
+                <widget class="QLabel" name="label_11">
+                 <property name="text">
+                  <string>Country</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="cb_country"/>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_12">
+                 <property name="text">
+                  <string>Your opinion about Neon</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QWidget" name="widget_4" native="true">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_13">
+                  <item>
+                   <widget class="QRadioButton" name="rb_love">
+                    <property name="text">
+                     <string>I LOVE Neon! 💙</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                    <attribute name="buttonGroup">
+                     <string notr="true">bt_likenessNeon</string>
+                    </attribute>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QRadioButton" name="rb_like">
+                    <property name="text">
+                     <string>I like Neon</string>
+                    </property>
+                    <attribute name="buttonGroup">
+                     <string notr="true">bt_likenessNeon</string>
+                    </attribute>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QRadioButton" name="rb_dislike">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="text">
+                     <string>Meh... I dislike it</string>
+                    </property>
+                    <attribute name="buttonGroup">
+                     <string notr="true">bt_likenessNeon</string>
+                    </attribute>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_13">
+                 <property name="text">
+                  <string>Other comments</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QTextEdit" name="tb_comments">
+                 <property name="placeholderText">
+                  <string>My comment...</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pb_saveForm">
+                 <property name="text">
+                  <string>Save it</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </widget>
             </item>
@@ -421,6 +552,27 @@
      <height>25</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout_Glow"/>
+    <addaction name="actionAout_Neon"/>
+    <addaction name="actionAbout_Qt"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuView"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -431,11 +583,27 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionAbout_Glow">
+   <property name="text">
+    <string>About Glow...</string>
+   </property>
+  </action>
+  <action name="actionAout_Neon">
+   <property name="text">
+    <string>Aout Neon...</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
+  <buttongroup name="bt_customProgressBar"/>
+  <buttongroup name="bt_likenessNeon"/>
  </buttongroups>
 </ui>
