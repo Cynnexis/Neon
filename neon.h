@@ -12,6 +12,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QGraphicsDropShadowEffect>
+#include <QGuiApplication>
 #include <QSettings>
 
 using namespace std;
@@ -78,6 +80,8 @@ private:
 
 	void initialize(QWidget* target, const Theme& theme);
 	void loadStatuses();
+	void applyEffectOnTree(QWidget* target, QGraphicsEffect* effect);
+	void applyEffectOnTree(QGuiApplication* target, QGraphicsEffect* effect);
 };
 
 #endif // NEON_H

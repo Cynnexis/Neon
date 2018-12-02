@@ -47,8 +47,10 @@ private slots:
 	void on_actionExit_triggered();
 	void on_actionNeon_triggered();
 	void on_actionDefault_triggered();
+	void on_actionRefresh_CSS_triggered();
 	void on_actionAbout_Glow_triggered();
 	void on_actionAbout_Qt_triggered();
+	
 	
 private:
 	Ui::MainWindow *ui;

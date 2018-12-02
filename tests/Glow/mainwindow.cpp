@@ -181,12 +181,19 @@ void MainWindow::on_actionExit_triggered() {
 
 void MainWindow::on_actionNeon_triggered() {
     ui->actionDefault->setChecked(false);
+	ui->actionRefresh_CSS->setChecked(true);
 	neon->neonize(this);
 }
 
 void MainWindow::on_actionDefault_triggered() {
 	ui->actionNeon->setChecked(false);
+	ui->actionRefresh_CSS->setChecked(false);
 	neon->unneonize(this);
+}
+
+void MainWindow::on_actionRefresh_CSS_triggered() {
+    neon->unneonize(this);
+	neon->neonize(this);
 }
 
 void MainWindow::on_actionAbout_Glow_triggered() {

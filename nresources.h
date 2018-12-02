@@ -9,6 +9,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonArray>
+#include <QRegularExpression>
 #include <QDebug>
 
 #include "theme.h"

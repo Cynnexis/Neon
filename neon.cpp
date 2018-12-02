@@ -54,14 +54,53 @@ void Neon::loadStatuses() {
 	}
 }
 
+void Neon::applyEffectOnTree(QWidget* target, QGraphicsEffect* effect) {
+	target->setGraphicsEffect(effect);
+	cout << "target \"" << target->objectName().toStdString() << "\" has been effected!" << endl;
+	
+	for (QObject* child : target->children()) {
+		try {
+			QWidget* w_child = qobject_cast<QWidget*>(child);
+			cout << "Casted!" << endl;
+			
+			if (w_child != nullptr)
+				applyEffectOnTree(w_child, effect);
+			else
+				cout << "Could not cast object \"" << child->objectName().toStdString() << "\", returned null." << endl;
+		} catch (std::exception e) {
+			cout << "Could not cast object \"" << child->objectName().toStdString() << "\"" << endl;
+		}
+	}
+}
+
+void Neon::applyEffectOnTree(QGuiApplication* target, QGraphicsEffect* effect) {
+	for (QObject* child : target->children()) {
+		try {
+			QWidget* w_child = qobject_cast<QWidget*>(child);
+			
+			if (w_child != nullptr)
+				applyEffectOnTree(w_child, effect);
+		} catch (std::exception e) {}
+	}
+}
+
 /* NEON METHODS */
 
 void Neon::neonize(QWidget* target) {
 	setTarget(target);
-	if (this->target == nullptr)
+	
+	QGraphicsDropShadowEffect shadowEffect(target);
+	shadowEffect.setBlurRadius(10);
+	shadowEffect.setColor(this->getCurrentStatus()->getPrimaryColor(this->getTheme()));
+	
+	if (this->target == nullptr) {
 		qApp->setStyleSheet(getStylesheet());
-	else
+		applyEffectOnTree(target, &shadowEffect);
+	}
+	else {
 		target->setStyleSheet(getStylesheet());
+		applyEffectOnTree(target, &shadowEffect);
+	}
 }
 
 void Neon::unneonize(QWidget* target) {

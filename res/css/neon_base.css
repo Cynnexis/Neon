@@ -1,5 +1,25 @@
 
 QMainWindow, QFrame, QScrollBar, QWidget, QTabBar::tab {
 	background-color: @backgroundColor;
-	color: @primaryColor;
+	color: white;
+}
+
+QPushButton {
+	background-color: @tint(backgroundColor, light);
+	padding: 10px;
+	border: 1px solid white;
+	border-radius: 5px;
+}
+
+QProgressBar {
+	border: 1px white solid;
+	border-radius: 5px;
+	background-color: @tint(backgroundColor, dark);
+	text-align: center;
+}
+QProgressBar::chunk {
+	margin: 0.5px;
+	border-radius: 5px;
+	background-color: @primaryColor;
+	/*box-shadow: @primaryColor 0 0 10px;*/
 }

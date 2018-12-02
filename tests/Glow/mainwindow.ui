@@ -185,7 +185,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-130</y>
+             <y>0</y>
              <width>501</width>
              <height>390</height>
             </rect>
@@ -323,7 +323,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-491</y>
+             <y>0</y>
              <width>501</width>
              <height>959</height>
             </rect>
@@ -688,6 +688,8 @@
     </property>
     <addaction name="actionNeon"/>
     <addaction name="actionDefault"/>
+    <addaction name="separator"/>
+    <addaction name="actionRefresh_CSS"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -747,6 +749,14 @@
    </property>
    <property name="text">
     <string>Default</string>
+   </property>
+  </action>
+  <action name="actionRefresh_CSS">
+   <property name="text">
+    <string>Refresh CSS</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
    </property>
   </action>
  </widget>

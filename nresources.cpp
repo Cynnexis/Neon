@@ -2,6 +2,7 @@
 
 QString read(const QString& filename);
 QString constructCSS(const QString& statusName, const QString& raw_json, QString css = "");
+QColor rgbStringToColor(const QString& rgb);
 
 QString NResources::getNeonDarkJSONPath() {
 #ifdef QT_DEBUG
@@ -54,8 +55,21 @@ QString NResources::getNeonLightCSS(const QString& statusName) {
 }
 
 QString NResources::merge(QString css, QMap<QString, QString> vars) {
-	for (QString key : vars.keys())
+	// Add some keys
+	if (vars.contains("primaryColor")) {
+		vars["tint(primaryColor, light)"] = rgbStringToColor(vars["primaryColor"]).lighter().name();
+		vars["tint(primaryColor, dark)"] = rgbStringToColor(vars["primaryColor"]).darker().name();
+	}
+	
+	if (vars.contains("backgroundColor")) {
+		vars["tint(backgroundColor, light)"] = rgbStringToColor(vars["backgroundColor"]).lighter().name();
+		vars["tint(backgroundColor, dark)"] = rgbStringToColor(vars["backgroundColor"]).darker().name();
+	}
+	
+	for (QString key : vars.keys()) {
+		rgbStringToColor(vars.value(key, ""));
 		css = css.replace("@" + key, vars.value(key, ""));
+	}
 
 	return css;
 }
@@ -73,6 +87,7 @@ QString read(const QString& filename) {
 
 	return result;
 }
+
 QString constructCSS(const QString& statusName, const QString& raw_json, QString css) {
 	if (css == "")
 		css = NResources::getNeonBaseCSS();
@@ -109,4 +124,40 @@ QString constructCSS(const QString& statusName, const QString& raw_json, QString
 	vars["backgroundColor"] = backgroundColor;
 
 	return NResources::merge(css, vars);
+}
+
+QColor rgbStringToColor(const QString& rgb) {
+	QRegularExpression rgb_pattern("(?:rgb\\(([0-9]+),\\s*([0-9]+),\\s*([0-9]+)\\)|rgba\\(([0-9]+),\\s*([0-9]+),\\s*([0-9]+),\\s*([0-9]+)\\)|\\#([a-fA-F0-9]{3}(?:[a-fA-F0-9]{3})?));?");
+	QRegularExpressionMatch match = rgb_pattern.match(rgb);
+	
+	if (!match.isValid() || !match.hasMatch())
+		throw "The expression \"" + rgb.toStdString() + "\" is not valid";
+	
+	if (match.captured(1) != "") {
+		return QColor(
+					match.captured(1).toInt(),
+					match.captured(2).toInt(),
+					match.captured(3).toInt()
+					);
+	}
+	else if (match.captured(4) != "") {
+		return QColor(
+					match.captured(1).toInt(),
+					match.captured(2).toInt(),
+					match.captured(3).toInt(),
+					match.captured(4).toInt()
+					);
+	}
+	else if (match.captured(4) != "") {
+		return QColor(
+					match.captured(4).toInt(),
+					match.captured(5).toInt(),
+					match.captured(6).toInt(),
+					match.captured(7).toInt()
+					);
+	}
+	else if (match.captured(8) != "")
+		return QColor(match.captured(8));
+	else
+		throw "No color found in \"" + rgb.toStdString() + "\"";
 }
