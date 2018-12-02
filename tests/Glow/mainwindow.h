@@ -7,7 +7,9 @@
 #include <QMainWindow>
 #include <QSettings>
 #include <QDateTime>
-#include <neon.h>
+#include <QFileSystemModel>
+#include <QFileIconProvider>
+#include <Neon>
 #include <nresources.h>
 
 using namespace std;
@@ -30,6 +32,7 @@ private slots:
 	void on_pushButton_clicked();
 	void on_cb_activateFlat_toggled(bool checked);
 	void on_pb_incrementLabel_clicked();
+	void on_cb_enableTristate_toggled(bool checked);
 
 	void on_rb_pb_indeterminate_toggled(bool checked);
 	void on_rb_pb_specificValue_toggled(bool checked);
@@ -41,13 +44,16 @@ private slots:
 	void on_le_firstname_textEdited(const QString &arg1);
 	void on_pb_saveForm_clicked();
 	
+	void on_actionExit_triggered();
+	void on_actionNeon_triggered();
+	void on_actionDefault_triggered();
 	void on_actionAbout_Glow_triggered();
 	void on_actionAbout_Qt_triggered();
-	
 	
 private:
 	Ui::MainWindow *ui;
 	QSettings settings;
+	Neon* neon;
 
 	int increment;
 

@@ -25,10 +25,12 @@ public:
 	/* CONSTRUCTOR */
 
 	Neon(QWidget* target = nullptr);
-	Neon(Theme theme, QWidget* target = nullptr);
+	Neon(const Theme& theme, QWidget* target = nullptr);
 
 	/* NEON METHODS */
 
+	void neonize(QWidget* target = nullptr);
+	void unneonize(QWidget* target = nullptr);
 	bool addStatus(Status *status);
 	bool addStatus(QString name, QColor primaryColor);
 	bool addStatus(QString name, QColor primaryColor, QColor backgroundColor);
@@ -42,18 +44,20 @@ public:
 	/* GETTERS */
 
 	Theme getTheme() const;
+	QWidget* getTarget() const;
 	Status* getCurrentStatus();
 
 	QString getStylesheet(Theme theme, Status status);
 	QString getStylesheet(Theme theme);
 	QString getStylesheet(Status status);
 	QString getStylesheet();
-
+	
 public slots:
-
+	
 	/* SETTERS */
-
+	
 	void setTheme(Theme theme);
+	void setTarget(QWidget* value);
 	Status* setCurrentStatus(const Status& status);
 	Status* setCurrentStatus(const int index);
 	Status* setCurrentStatus(const QString name);
@@ -72,7 +76,7 @@ private:
 	QList<Status*> statuses;
 	int indexCurrentStatus;
 
-	void initialize(QWidget* target, Theme theme);
+	void initialize(QWidget* target, const Theme& theme);
 	void loadStatuses();
 };
 

@@ -7,11 +7,11 @@ Neon::Neon(QWidget* target) : QObject(target) {
 	this->initialize(target, static_cast<Theme>(t));
 }
 
-Neon::Neon(Theme theme, QWidget* target) : QObject(target) {
+Neon::Neon(const Theme& theme, QWidget* target) : QObject(target) {
 	this->initialize(target, theme);
 }
 
-void Neon::initialize(QWidget* target, Theme theme) {
+void Neon::initialize(QWidget* target, const Theme& theme) {
 	Q_INIT_RESOURCE(neon_resources);
 
 	this->target = target;
@@ -55,6 +55,21 @@ void Neon::loadStatuses() {
 }
 
 /* NEON METHODS */
+
+void Neon::neonize(QWidget* target) {
+	setTarget(target);
+	if (this->target == nullptr)
+		qApp->setStyleSheet(getStylesheet());
+	else
+		target->setStyleSheet(getStylesheet());
+}
+
+void Neon::unneonize(QWidget* target) {
+	if (target == nullptr)
+		qApp->setStyleSheet("");
+	else
+		target->setStyleSheet("");
+}
 
 bool Neon::addStatus(Status* status) {
 	for (const Status* s : this->statuses)
@@ -131,14 +146,22 @@ Theme Neon::getTheme() const {
 	return this->theme;
 }
 
-Status* Neon::getCurrentStatus() {
-	return statuses.at(indexCurrentStatus);
-}
-
 void Neon::setTheme(Theme theme) {
 	this->theme = theme;
 	settings.setValue("neon_lib/theme", this->theme);
 	emit themeChanged(this->theme);
+}
+
+QWidget* Neon::getTarget() const {
+	return target;
+}
+
+void Neon::setTarget(QWidget* value) {
+	target = value;
+}
+
+Status* Neon::getCurrentStatus() {
+	return statuses.at(indexCurrentStatus);
 }
 
 Status* Neon::setCurrentStatus(const Status& status) {

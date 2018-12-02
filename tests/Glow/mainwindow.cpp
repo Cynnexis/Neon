@@ -4,25 +4,34 @@
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent), ui(new Ui::MainWindow) {
 	ui->setupUi(this);
-	//Neon neon;
+	neon = new Neon(Theme::LIGHT, this);
 
 	// Initialization
 	increment = -1;
 	on_pb_incrementLabel_clicked();
 
-	ui->cb_gender->addItems(QStringList({"Male", "Female", "Agender", "Transgender", "Male Transgender", "Female Transgender", "Non-binary", "Genderqueer", "Third Gender", "Two-spirit"}));
-	ui->cb_pronouns->addItems(QStringList({"he", "she", "they", "<name>", "ae", "fae", "e", "ey", "per", "ve", "xe", "ze", "zie"}));
+	ui->cb_gender->addItems({"Male", "Female", "Agender", "Transgender", "Male Transgender", "Female Transgender", "Non-binary", "Genderqueer", "Third Gender", "Two-spirit", "I want to keep it secret"});
+	ui->cb_pronouns->addItems({"he", "she", "they", "<name>", "ae", "fae", "e", "ey", "per", "ve", "xe", "ze", "zie"});
 	
 	ui->cb_country->addItems(getCountries());
+	
+	// Init the tree
+	QFileSystemModel model;
+	model.setRootPath("");
+	model.setReadOnly(true);
+	model.iconProvider()->setOptions(QFileIconProvider::DontUseCustomDirectoryIcons);
+	ui->tr_dir->setModel(&model);
+	ui->tr_dir->setRootIndex(model.index(QDir::currentPath()));
+	ui->tr_dir->setColumnWidth(0, ui->tr_dir->width() / 3);
 	
 	// Load from settings
 	ui->le_firstname->setText(settings.value("form/firstname", "").toString());
 	ui->le_lastname->setText(settings.value("form/lastname", "").toString());
 	ui->sp_age->setValue(settings.value("form/age", 18).toInt());
 	ui->dt_birthday->setDateTime(settings.value("form/birthday", QDateTime()).toDateTime());
-	ui->cb_gender->setEditText(settings.value("form/gender", "").toString());
+	ui->cb_gender->setCurrentIndex(settings.value("form/gender", 0).toInt());
 	ui->cb_pronouns->setEditText(settings.value("form/pronoun", "").toString());
-	ui->cb_country->setEditText(settings.value("form/country", "").toString());
+	ui->cb_country->setCurrentIndex(settings.value("form/country", 0).toInt());
 	
 	int like = settings.value("form/likeNeon", 0).toInt();
 	
@@ -104,6 +113,10 @@ void MainWindow::on_pb_incrementLabel_clicked() {
 	ui->lb_increment->setText(tr("You clicked onto this button %n time(s).", "", ++increment));
 }
 
+void MainWindow::on_cb_enableTristate_toggled(bool checked) {
+    ui->cb_tristate->setEnabled(checked);
+}
+
 void MainWindow::on_cb_pronouns_currentTextChanged(const QString& arg1) {
 	updatePronounExample();
 }
@@ -142,9 +155,9 @@ void MainWindow::on_pb_saveForm_clicked() {
     settings.setValue("form/lastname", ui->le_lastname->text());
     settings.setValue("form/age", ui->sp_age->value());
     settings.setValue("form/birthday", ui->dt_birthday->dateTime());
-    settings.setValue("form/gender", ui->cb_gender->currentText());
+    settings.setValue("form/gender", ui->cb_gender->currentIndex());
     settings.setValue("form/pronoun", ui->cb_pronouns->currentText());
-    settings.setValue("form/country", ui->cb_country->currentText());
+    settings.setValue("form/country", ui->cb_country->currentIndex());
 	
 	int like = 0;
 	if (ui->rb_love->isChecked())
@@ -158,7 +171,22 @@ void MainWindow::on_pb_saveForm_clicked() {
     settings.setValue("form/comments", ui->tb_comments->toHtml());
 	
 	settings.sync();
-	qDebug() << "Settings saved at \"" << settings.fileName().replace("\\\\", "\\") << "\"";
+	qDebug() << "Settings saved at " << settings.fileName();
+	ui->statusBar->showMessage("Form saved!", 5 * 1000);
+}
+
+void MainWindow::on_actionExit_triggered() {
+    qApp->exit();
+}
+
+void MainWindow::on_actionNeon_triggered() {
+    ui->actionDefault->setChecked(false);
+	neon->neonize(this);
+}
+
+void MainWindow::on_actionDefault_triggered() {
+	ui->actionNeon->setChecked(false);
+	neon->unneonize(this);
 }
 
 void MainWindow::on_actionAbout_Glow_triggered() {

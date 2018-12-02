@@ -31,6 +31,7 @@ SOURCES += \
 
 HEADERS += \
 	neon.h \
+	Neon \
 	neon_global.h \
     theme.h \
     singleapp.h \
