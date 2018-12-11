@@ -11,6 +11,7 @@
 #include <QFileIconProvider>
 #include <Neon>
 #include <nresources.h>
+#include <QGraphicsDropShadowEffect>
 
 using namespace std;
 

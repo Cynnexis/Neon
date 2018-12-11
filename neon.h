@@ -32,16 +32,32 @@ public:
 	/* NEON METHODS */
 
 	void neonize(QWidget* target = nullptr);
+	void neonize(QGuiApplication* target);
+	
 	void unneonize(QWidget* target = nullptr);
+	
 	bool addStatus(Status *status);
 	bool addStatus(QString name, QColor primaryColor);
 	bool addStatus(QString name, QColor primaryColor, QColor backgroundColor);
 	bool addStatus(QString name, QColor lightPrimaryColor, QColor lightBackgroundColor, QColor darkPrimaryColor, QColor darkBackgroundColor);
+	
 	Status* getStatus(int index);
 	Status* getStatus(QString name);
+	
 	bool removeStatus(Status *status);
 	void removeStatus(int index);
 	void removeStatus(QString name);
+	
+	void processNodes(QObject* tree, void (*f)(QObject*));
+	
+	void applyEffectOnTree(QWidget* target, QGraphicsEffect& effect);
+	void applyEffectOnTree(QGuiApplication* target, QGraphicsEffect& effect);
+	
+	template<class Widget>
+	void applyEffectOnTreeOnType(QWidget* target, QGraphicsEffect& effect);
+	
+	template<class... Widgets>
+	void applyEffectOnTreeOnTypes(QWidget* target, QGraphicsEffect& effect);
 
 	/* GETTERS */
 
@@ -80,8 +96,6 @@ private:
 
 	void initialize(QWidget* target, const Theme& theme);
 	void loadStatuses();
-	void applyEffectOnTree(QWidget* target, QGraphicsEffect* effect);
-	void applyEffectOnTree(QGuiApplication* target, QGraphicsEffect* effect);
 };
 
 #endif // NEON_H

@@ -25,11 +25,8 @@ void Neon::initialize(QWidget* target, const Theme& theme) {
 	loadStatuses();
 
 	indexCurrentStatus = settings.value("neon_lib/indexCurrentStatus", 0).toInt();
-
-	if (this->target == nullptr)
-		qApp->setStyleSheet(getStylesheet());
-	else
-		target->setStyleSheet(getStylesheet());
+	
+	//neonize(this->target);
 }
 
 void Neon::loadStatuses() {
@@ -54,53 +51,39 @@ void Neon::loadStatuses() {
 	}
 }
 
-void Neon::applyEffectOnTree(QWidget* target, QGraphicsEffect* effect) {
-	target->setGraphicsEffect(effect);
-	cout << "target \"" << target->objectName().toStdString() << "\" has been effected!" << endl;
-	
-	for (QObject* child : target->children()) {
-		try {
-			QWidget* w_child = qobject_cast<QWidget*>(child);
-			cout << "Casted!" << endl;
-			
-			if (w_child != nullptr)
-				applyEffectOnTree(w_child, effect);
-			else
-				cout << "Could not cast object \"" << child->objectName().toStdString() << "\", returned null." << endl;
-		} catch (std::exception e) {
-			cout << "Could not cast object \"" << child->objectName().toStdString() << "\"" << endl;
-		}
-	}
-}
-
-void Neon::applyEffectOnTree(QGuiApplication* target, QGraphicsEffect* effect) {
-	for (QObject* child : target->children()) {
-		try {
-			QWidget* w_child = qobject_cast<QWidget*>(child);
-			
-			if (w_child != nullptr)
-				applyEffectOnTree(w_child, effect);
-		} catch (std::exception e) {}
-	}
-}
-
 /* NEON METHODS */
 
 void Neon::neonize(QWidget* target) {
 	setTarget(target);
 	
-	QGraphicsDropShadowEffect shadowEffect(target);
+	/*QGraphicsDropShadowEffect shadowEffect;
+	shadowEffect.setOffset(0, 0);
 	shadowEffect.setBlurRadius(10);
-	shadowEffect.setColor(this->getCurrentStatus()->getPrimaryColor(this->getTheme()));
+	shadowEffect.setColor(this->getCurrentStatus()->getPrimaryColor(this->getTheme()));*/
 	
 	if (this->target == nullptr) {
 		qApp->setStyleSheet(getStylesheet());
-		applyEffectOnTree(target, &shadowEffect);
+		//applyEffectOnTree(target, shadowEffect);
 	}
 	else {
 		target->setStyleSheet(getStylesheet());
-		applyEffectOnTree(target, &shadowEffect);
+		//applyEffectOnTree(target, shadowEffect);
 	}
+}
+
+void Neon::neonize(QGuiApplication* target) {
+	if (target != nullptr) {
+		for (QObject* child : target->children()) {
+			try {
+				QWidget* w_child = qobject_cast<QWidget*>(child);
+				
+				if (w_child != nullptr)
+					neonize(w_child);
+			} catch (std::exception e) {}
+		}
+	}
+	else
+		this->neonize();
 }
 
 void Neon::unneonize(QWidget* target) {
@@ -177,6 +160,57 @@ void Neon::removeStatus(QString name) {
 		// If the old index was pointing at the old status, change it to "NORMAL"
 		setCurrentStatus(0);
 	}
+}
+
+void Neon::processNodes(QObject* tree, void (*f)(QObject*)) {
+	for (QObject* child : tree->children()) {
+		f(child);
+		processNodes(child, f);
+	}
+}
+
+void Neon::applyEffectOnTree(QWidget* target, QGraphicsEffect& effect) {
+	target->setGraphicsEffect(&effect);
+	
+	for (QObject* child : target->children()) {
+		try {
+			QWidget* w_child = qobject_cast<QWidget*>(child);
+			
+			if (w_child != nullptr)
+				applyEffectOnTree(w_child, effect);
+		} catch (std::exception e) {}
+	}
+}
+
+void Neon::applyEffectOnTree(QGuiApplication* target, QGraphicsEffect& effect) {
+	for (QObject* child : target->children()) {
+		try {
+			QWidget* w_child = qobject_cast<QWidget*>(child);
+			
+			if (w_child != nullptr)
+				applyEffectOnTree(w_child, effect);
+		} catch (std::exception e) {}
+	}
+}
+
+template<class Widget>
+void Neon::applyEffectOnTreeOnType(QWidget* target, QGraphicsEffect& effect) {
+	target->setGraphicsEffect(&effect);
+	
+	for (QObject* child : target->children()) {
+		try {
+			QWidget* w_child = qobject_cast<Widget*>(child);
+			
+			if (w_child != nullptr)
+				applyEffectOnTreeOnType<Widget>(w_child, effect);
+		} catch (std::exception e) {}
+	}
+}
+
+template<class... Widgets>
+void Neon::applyEffectOnTreeOnTypes(QWidget* target, QGraphicsEffect& effect) {
+	int parameters[] = {0, (applyEffectOnTreeOnType<Widgets>(target, effect), 0)...};
+	(void)parameters;
 }
 
 /* GETTER & SETTER */

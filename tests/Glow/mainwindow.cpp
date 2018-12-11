@@ -48,6 +48,21 @@ MainWindow::MainWindow(QWidget *parent) :
 	}
 	
 	ui->tb_comments->setHtml(settings.value("form/comments", "").toString());
+	
+	// All widgets have now a tooltips with their name inside
+	neon->processNodes(this, [](QObject* o) {
+		QWidget* w = qobject_cast<QWidget*>(o);
+		if (w != nullptr) {
+			w->setToolTip(w->objectName());
+			connect(w, SIGNAL(objectNameChanged(QString)), w, SLOT(setToolTip(QString)));
+		}
+	});
+	
+	QGraphicsDropShadowEffect shadowEffect(ui->lb_increment);
+	//shadowEffect.setOffset(1.0);
+	shadowEffect.setBlurRadius(1.0);
+	//shadowEffect.setColor(QColor(255, 0, 0, 160));
+	ui->lb_increment->setGraphicsEffect(&shadowEffect);
 }
 
 MainWindow::~MainWindow() {
